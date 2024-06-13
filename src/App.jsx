@@ -12,17 +12,30 @@ function App() {
   };
 
   const getCityWeather = async () => {
-    const response = await fetch(`https://api.openweathermap.org/data/2.5/weather?q=${inputValue}&appid=${ApiKey}`);
-    
-    const data = await response.json();
-    setWeatherData(data);
+    try {
+      const response = await fetch(`https://api.openweathermap.org/data/2.5/weather?q=${inputValue}&appid=${ApiKey}`);
+      if (!response.ok) {
+        throw new Error('Failed to fetch weather data');
+      }
+      const data = await response.json();
+      setWeatherData(data);
+    } catch (error) {
+      console.error('Error fetching weather data:', error);
+    }
   };
 
   const getAlldata = async () => {
-    if (weatherData && weatherData.coord) {
-      const response = await fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${weatherData.coord.lat}&lon=${weatherData.coord.lon}&appid=${ApiKey}`);
-      const data = await response.json();
-      setAlldata(data);
+    try {
+      if (weatherData && weatherData.coord) {
+        const response = await fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${weatherData.coord.lat}&lon=${weatherData.coord.lon}&appid=${ApiKey}`);
+        if (!response.ok) {
+          throw new Error('Failed to fetch additional data');
+        }
+        const data = await response.json();
+        setAlldata(data);
+      }
+    } catch (error) {
+      console.error('Error fetching additional data:', error);
     }
   };
 
